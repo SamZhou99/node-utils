@@ -22,10 +22,10 @@ const db_jimo100 = new mysqlSync({
 let test = {
     async init() {
         console.log(utils.common.MD5('12345'));
-        console.log(utils.common.getTime());
-        // await this.testDB(db_lajiao);
-        // await this.testDB(db_jimo100);
-        // await test.checkUrl();
+        console.log(utils.common.Time());
+        await this.testDB(db_lajiao);
+        await this.testDB(db_jimo100);
+        await test.checkUrl();
     },
     async testDB(db) {
         let result = await db.Query('SELECT * FROM articles LIMIT ?', [10]);

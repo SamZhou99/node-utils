@@ -18,7 +18,7 @@ let utils = {
         },
 
         // 当前时间，一般时间格式
-        currentTime(diff = 480) {
+        Time(diff = 480) {
             return moment().utcOffset(diff).format('YYYY-MM-DD H:mm:ss');
         }
     },
