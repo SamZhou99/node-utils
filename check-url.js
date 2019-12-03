@@ -2,14 +2,14 @@ const http = require('http');
 const https = require('https');
 const axios = require('axios');
 
-let check = {
+let __this = {
     // 默认超时 设置
     timeout: 3000,
     // http, https 请求
     http(url) {
         return new Promise((resolve, reject) => {
             if (url.indexOf('https://') != -1) {
-                let hs = https.get(url, { timeout: check.timeout }, (res) => {
+                let hs = https.get(url, { timeout: __this.timeout }, (res) => {
                     res.on('data', (chunk) => {
                         // console.log('https data', chunk);
                         hs.abort();
@@ -24,7 +24,7 @@ let check = {
                     resolve(false);
                 });
             } else {
-                let hs = http.get(url, { timeout: check.timeout }, (res) => {
+                let hs = http.get(url, { timeout: __this.timeout }, (res) => {
                     res.on('data', (chunk) => {
                         // console.log('http data', chunk);
                         hs.abort();
@@ -58,4 +58,4 @@ let check = {
     }
 }
 
-module.exports = check;
+module.exports = __this;

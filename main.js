@@ -1,43 +1,103 @@
-const utils = require('./utils.js');
+// 公共
+const crypto = require('crypto');
+const moment = require('moment');
 
+// 自定义方法
 const checkUrl = require('./check-url.js');
-checkUrl.timeout = 3000;
-
 const mysqlSync = require('./mysql-sync.js');
-const db_lajiao = new mysqlSync({
-    host: '127.0.0.1',
-    port: '3306',
-    user: 'root',
-    password: 'root',
-    database: 'lajiao_video'
-});
-const db_jimo100 = new mysqlSync({
-    host: '127.0.0.1',
-    port: '3306',
-    user: 'root',
-    password: 'root',
-    database: 'jimo100'
-});
+const fsTools = require('./file-tools.js');
+const DownloadBigFile = require('./download-bigfile.js');
 
-let test = {
-    async init() {
-        console.log(utils.common.MD5('12345'));
-        console.log(utils.common.Time());
-        await this.testDB(db_lajiao);
-        await this.testDB(db_jimo100);
-        await test.checkUrl();
-    },
-    async testDB(db) {
-        let result = await db.Query('SELECT * FROM articles LIMIT ?', [10]);
-        console.log(result[0].title, result[0].a_title);
-    },
-    async checkUrl() {
-        let result = await checkUrl.http('https://www.tianshiw.club/?m=vod-play-id-6238-src-1-num-1.html');
-        console.log('http模块测试结果：', result);
+// 使用
+let __this = {
+    mysqlSync, checkUrl, fsTools, DownloadBigFile,
 
-        result = await checkUrl.axios('https://www.tianshiw.club');
-        console.log('axios模块测试结果：', result);
+    // 获取IP
+    getIP(req) {
+        let ip = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+        return ip;
     },
-};
 
-test.init();
+    // md5 加密
+    MD5(str32) {
+        return crypto.createHash('md5').update(str32).digest('hex');
+    },
+
+    // 当前时间，一般时间格式
+    Time(diff = 480) {
+        return moment().utcOffset(diff).format('YYYY-MM-DD H:mm:ss');
+    },
+
+
+    string: {
+        // 前面补零
+        SupplementZero: function (SourceNum, MaxLength = 2) {
+            let zero = "0000000000000000000000000000";
+            let numStr = String(Number(SourceNum));
+            if (numStr.length < MaxLength) {
+                let n2 = MaxLength - numStr.length;
+                return zero.substr(0, n2) + String(numStr);
+            }
+            return SourceNum;
+        },
+
+        // 替换全部字符串
+        ReplaceAll: function (sourceStr, targetStr, replacementStr) {
+            return sourceStr.split(targetStr).join(replacementStr);
+            // return sourceStr.replace(/targetStr/g, replacementStr);
+        },
+
+        // 字符串 转 整数
+        toInt(any, defaultValue = 0) {
+            return isNaN(parseInt(any)) ? defaultValue : parseInt(any);
+        },
+
+        // 字符串 转 数字
+        toNumber(any, defaultValue = 0) {
+            return isNaN(Number(any)) ? defaultValue : Number(any);
+        },
+
+        // 查找功能
+        Find: {
+
+            //查找截取一段
+            Str: function (SourceStr, StartStr, EndStr, StartIndex = 0) {
+                if (!StartIndex) StartIndex = 0;
+                let n1 = SourceStr.indexOf(StartStr, StartIndex) + StartStr.length;
+                let n2 = SourceStr.indexOf(EndStr, n1);
+                if (n1 == -1 || n2 == -1 || n1 > n2) return null;
+                return {
+                    Str: SourceStr.substring(n1, n2),
+                    EndIndex: n2
+                };
+            },
+
+            //重复 查找截取某段
+            StrLoop: function (SourceStr, StartStr, EndStr, StartIndex = 0) {
+                let _this = __this.string.Find;
+                let _index = 0;
+                let _maxLoop = 9999;
+                let arr = [];
+
+                while (true) {
+                    if (_index >= _maxLoop) break;
+
+                    let result = _this.Str(SourceStr, StartStr, EndStr, StartIndex);
+                    if (!result) break;
+                    if (StartIndex > result.EndIndex) break;
+
+                    arr.push(result.Str);
+                    StartIndex = result.EndIndex;
+                    _index++;
+                }
+                return arr;
+            }
+        }
+
+    },
+}
+
+module.exports = __this;
