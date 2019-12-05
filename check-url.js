@@ -45,7 +45,7 @@ let __this = {
     axios(url) {
         return new Promise((resolve, reject) => {
             // console.log('axios start');
-            axios.get(url)
+            axios.get(url, { timeout: __this.timeout })
                 .then((res) => {
                     // console.log('axios end');
                     resolve(true);
