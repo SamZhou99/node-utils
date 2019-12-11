@@ -3,8 +3,10 @@ const https = require('https');
 const axios = require('axios');
 
 let __this = {
+
     // 默认超时 设置
     timeout: 3000,
+
     // http, https 请求
     http(url) {
         return new Promise((resolve, reject) => {
@@ -41,6 +43,7 @@ let __this = {
             }
         });
     },
+    
     // axios 请求
     axios(url) {
         return new Promise((resolve, reject) => {
