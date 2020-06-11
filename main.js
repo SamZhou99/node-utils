@@ -7,10 +7,15 @@ const checkUrl = require('./check-url.js');
 const mysqlSync = require('./mysql-sync.js');
 const fsTools = require('./file-tools.js');
 const DownloadBigFile = require('./download-bigfile.js');
+const request = require('./request.js');
 
 // 使用
 let __this = {
-    mysqlSync, checkUrl, fsTools, DownloadBigFile,
+    mysqlSync,
+    checkUrl,
+    request,
+    fsTools,
+    DownloadBigFile,
 
     // 获取IP
     getIP(req) {
