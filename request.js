@@ -230,10 +230,47 @@ let __this = {
 
                 for (let i = 1; i <= RequestMaxNum; i++) {
                     if (IsDubeg) {
-                        console.log(`第${i}请求 ${Url}`);
+                        console.log(`第${i}请求 get ${Url}`);
                     }
-                    console.log(Url)
                     let result = await axios.get(Url, Option).catch(err => {
+                        console.log('请求错误');
+                        console.log(err.code);
+                    })
+
+                    if (result) {
+                        resolve(result);
+                        break;
+                    }
+                }
+
+                resolve(null);
+            })
+        },
+        // 示例：
+        // let result = await request.axios.post({ url: 'http://www.baidu.com', headers: request.HEADERS.pc, isDebug: false });
+        // console.log(result.data)
+        async post(paramsObj){
+            return new Promise(async (resolve, reject) => {
+
+                const IsDubeg = paramsObj.isDebug || false;
+                const Url = paramsObj.url || '';
+                const RequestMaxNum = paramsObj.max || 3;
+                const RequestBody = paramsObj.body;
+                const Option = {
+                    timeout: paramsObj.timeout || __this.TIMEOUT,
+                    headers: paramsObj.headers || __this.HEADERS.pc,
+                };
+
+                if (!RequestBody) {
+                    reject("没有表单参数");
+                    return;
+                }
+
+                for (let i = 1; i <= RequestMaxNum; i++) {
+                    if (IsDubeg) {
+                        console.log(`第${i}请求 post ${Url}`);
+                    }
+                    let result = await axios.post(Url, RequestBody, Option).catch(err => {
                         console.log('请求错误');
                         console.log(err.code);
                     })
