@@ -138,6 +138,14 @@ let __this = {
                 return;
             }
 
+            // request error event
+            request.on('error',(e)=>{
+                Out('request error...')
+                if(callback){
+                    callback(e)
+                }
+            })
+
             // 监听事件
             request.addListener('response', function (response) {
                 if (response.statusCode != 200) {
