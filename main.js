@@ -5,6 +5,7 @@ const moment = require('moment');
 // 自定义方法
 const checkUrl = require('./check-url.js');
 const mysqlSync = require('./mysql-sync.js');
+const mysqlSyncCache = require('./mysql-sync-cache.js')
 const fsTools = require('./file-tools.js');
 const DownloadBigFile = require('./download-bigfile.js');
 const request = require('./request.js');
@@ -12,6 +13,7 @@ const request = require('./request.js');
 // 使用
 let __this = {
     mysqlSync,
+    mysqlSyncCache,
     checkUrl,
     request,
     fsTools,
