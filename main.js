@@ -17,6 +17,8 @@ let __this = {
     checkUrl,
     request,
     fsTools,
+    moment,
+    crypto,
     DownloadBigFile,
 
     // 获取IP
@@ -36,6 +38,9 @@ let __this = {
     // 当前时间，一般时间格式
     Time(diff = 480) {
         return moment().utcOffset(diff).format('YYYY-MM-DD H:mm:ss');
+    },
+    Timestamp(time, diff = 480) {
+        return moment(time).utcOffset(diff).format('YYYY-MM-DD H:mm:ss');
     },
 
 
