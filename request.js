@@ -139,9 +139,9 @@ let __this = {
             }
 
             // request error event
-            request.on('error',(e)=>{
+            request.on('error', (e) => {
                 Out('request error...')
-                if(callback){
+                if (callback) {
                     callback(e)
                 }
             })
@@ -231,18 +231,17 @@ let __this = {
                 };
 
                 if (!Url) {
-                    reject("参数没有Url");
+                    reject("Missing Parameters Url");
                     return;
                 }
 
 
                 for (let i = 1; i <= RequestMaxNum; i++) {
                     if (IsDubeg) {
-                        console.log(`第${i}请求 get ${Url}`);
+                        console.log(`Number ${i} request get ${Url}`);
                     }
                     let result = await axios.get(Url, Option).catch(err => {
-                        console.log('请求错误');
-                        console.log(err.code);
+                        console.log('request error : ', Url, err.code);
                     })
 
                     if (result) {
@@ -257,7 +256,7 @@ let __this = {
         // 示例：
         // let result = await request.axios.post({ url: 'http://www.baidu.com', headers: request.HEADERS.pc, isDebug: false });
         // console.log(result.data)
-        async post(paramsObj){
+        async post(paramsObj) {
             return new Promise(async (resolve, reject) => {
 
                 const IsDubeg = paramsObj.isDebug || false;
